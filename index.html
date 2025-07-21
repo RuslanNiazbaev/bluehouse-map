@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BlueHouse Map</title>
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      font-family: sans-serif;
+      font-weight: 500;
+      z-index: 5;
+    }
+
+    .zoom-buttons {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    .zoom-buttons button,
+    .maptype-buttons button,
+    .fullscreen-button button {
+      margin: 2px;
+      padding: 6px 12px;
+      font-size: 14px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .zoom-buttons button:hover,
+    .maptype-buttons button:hover,
+    .fullscreen-button button:hover {
+      background-color: #eee;
+    }
+
+    .maptype-buttons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 5;
+    }
+
+    .fullscreen-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Легенда -->
+  <div class="legend">🗺️ BlueHouse Iceland</div>
+
+  <!-- Зум -->
+  <div class="zoom-buttons">
+    <button onclick="map.setZoom(map.getZoom() + 1)">➕</button>
+    <button onclick="map.setZoom(map.getZoom() - 1)">➖</button>
+  </div>
+
+  <!-- Кнопки Map / Satellite -->
+  <div class="maptype-buttons">
+    <button onclick="map.setMapTypeId('roadmap')">Map</button>
+    <button onclick="map.setMapTypeId('satellite')">Satellite</button>
+  </div>
+
+  <!-- Кнопка Fullscreen -->
+  <div class="fullscreen-button">
+    <button onclick="toggleFullscreen()">⛶</button>
+  </div>
+
+  <script>
+    let map;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 64.1355, lng: -21.8954 },
+        zoom: 12,
+        mapTypeId: 'roadmap',
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        disableDefaultUI: true
+      });
+
+      new google.maps.KmlLayer({
+        url: 'https://ruslanniazbaev.github.io/bluehouse-map/bluehouse.kml',
+        map: map,
+        preserveViewport: false,
+      });
+    }
+
+    function toggleFullscreen() {
+      const elem = document.documentElement;
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-LWuIlquldSBDqQWlgr3nJE8h3AMTDCE&callback=initMap">
+  </script>
+</body>
+</html>
